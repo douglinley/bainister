@@ -4,12 +4,15 @@ using Microsoft.Xna.Framework.Input;
 
 namespace banister
 {
-    public class Game1 : Game
+    public class Main : Game
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        private Player _player;
 
-        public Game1()
+        public static float TimeScale = 1f;
+
+        public Main()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -19,6 +22,7 @@ namespace banister
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            _player = new Player(new Vector2(20, 20), 100, 25, 25);
 
             base.Initialize();
         }
@@ -26,8 +30,19 @@ namespace banister
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+            Texture2D baseTexture = new Texture2D(GraphicsDevice, 1, 1);
+            baseTexture.SetData(new[] { Color.White });
+            _player.Texture = baseTexture;
+        }
 
-            // TODO: use this.Content to load your game content here
+        protected override void UnloadContent()
+        {
+            base.UnloadContent();
+            _spriteBatch.Dispose();
+            if(_player != null)
+            {
+                _player.Texture.Dispose();
+            }
         }
 
         protected override void Update(GameTime gameTime)
@@ -36,15 +51,20 @@ namespace banister
                 Exit();
 
             // TODO: Add your update logic here
+            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds * TimeScale;
+
+            _player.Update(deltaTime);
 
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
-            // TODO: Add your drawing code here
+            _spriteBatch.Begin();
+            _player.Draw(_spriteBatch);
+            _spriteBatch.End();
 
             base.Draw(gameTime);
         }
