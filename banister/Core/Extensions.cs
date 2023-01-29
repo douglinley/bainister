@@ -5,7 +5,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace banister
+namespace banister.Core
 {
     public static class Extensions
     {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 
-namespace banister;
+namespace banister.Core;
 
 public interface IDrawable
 {

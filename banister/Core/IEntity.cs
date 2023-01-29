@@ -1,4 +1,4 @@
-﻿namespace banister;
+﻿namespace banister.Core;
 
 public interface IEntity : IDrawable, IUpdateable
 {
