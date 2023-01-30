@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using banister.GameObjects;
+using banister.Core;
+using Microsoft.Xna.Framework.Audio;
 
 namespace banister;
 
@@ -10,6 +12,7 @@ public class Main : Game
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     private Player _player;
+    private SpriteFont _font;
 
     public static float TimeScale = 1f;
 
@@ -30,10 +33,22 @@ public class Main : Game
 
     protected override void LoadContent()
     {
+        string[] soundEffects =
+        {
+            "shoot"
+        };
+
+        foreach(var effect in soundEffects)
+        {
+            Audio.AddSoundEffect(effect, Content.Load<SoundEffect>($"Sound/{effect}"));
+        }
+
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         Texture2D baseTexture = new Texture2D(GraphicsDevice, 1, 1);
         baseTexture.SetData(new[] { Color.White });
         _player.Texture = baseTexture;
+
+        _font = Content.Load<SpriteFont>("Fonts/font");
     }
 
     protected override void UnloadContent()
@@ -48,14 +63,14 @@ public class Main : Game
 
     protected override void Update(GameTime gameTime)
     {
+        Input.Update(true);
+
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
-        // TODO: Add your update logic here
         float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds * TimeScale;
 
         _player.Update(deltaTime);
-
         base.Update(gameTime);
     }
 
@@ -64,6 +79,8 @@ public class Main : Game
         GraphicsDevice.Clear(Color.Black);
 
         _spriteBatch.Begin();
+        _spriteBatch.DrawString(_font, $"Shoot Cooldown : {_player.ShootCooldown.ToString()}", new Vector2(20, 20), Color.Yellow);
+        _spriteBatch.DrawString(_font, $"Sec Between Shot : {_player.SecondsBetweenShots.ToString()}", new Vector2(20, 35), Color.Yellow);
         _player.Draw(_spriteBatch);
         _spriteBatch.End();
 

@@ -24,7 +24,7 @@ public class Input
         _currentKeyboardState = Keyboard.GetState();
 
         _prevMouseState = _currentMouseState;
-        _prevMouseState = Mouse.GetState();
+        _currentMouseState = Mouse.GetState();
     }
 
     public static bool IsKeyPressed(Keys key) => _currentKeyboardState.IsKeyDown(key) && _prevKeyboardState.IsKeyUp(key);
